@@ -213,6 +213,7 @@
         },
       });
     });
+  }
   // ── Respondent Table & Export ──
 
   let cachedResponses = [];
