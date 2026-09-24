@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Formulir Kuesioner Sikap Disiplin Siswa SMA Kornita IPB Bogor.">
+  <title>Isi Kuesioner — SMA Kornita IPB Bogor</title>
+  <link rel="icon" type="image/png" href="assets/tab_logo.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="form-page">
+
+  <!-- Header -->
+  <header class="page-header">
+    <div class="container">
+      <div class="page-header__inner">
+        <img src="assets/logo.png" alt="Logo" class="page-header__logo">
+        <div>
+          <div class="page-header__title">Kuesioner Sikap Disiplin Siswa</div>
+          <p class="page-header__subtitle">SMA Kornita IPB Bogor — Lab School</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification -->
+  <div id="notification" class="notification" role="alert"></div>
+
+  <!-- Form Content -->
+  <main class="form-page__content">
+    <div class="container">
+
+      <form id="questionnaire-form" novalidate>
+
+        <!-- Data Diri -->
+        <section class="form-section">
+          <h2 class="form-section__title">Data Diri</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="input-nama">
+                Nama Lengkap <span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="input-nama"
+                class="form-input"
+                placeholder="Masukkan nama lengkap"
+                required
+                autocomplete="name"
+              >
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="input-kelas">
+                Kelas <span class="required">*</span>
+              </label>
+              <select
+                id="input-kelas"
+                class="form-select"
+                required
+              >
+                <option value="" disabled selected>Pilih kelas Anda</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Scale Legend -->
+        <div class="scale-legend">
+          <div class="scale-legend__title">Keterangan Skala Penilaian</div>
+          <div class="scale-legend__items">
+            <div class="scale-legend__item">
+              <span class="scale-legend__number">1</span>
+              <span>= Sangat Tidak Setuju</span>
+            </div>
+            <div class="scale-legend__item">
+              <span class="scale-legend__number">2</span>
+              <span>= Tidak Setuju</span>
+            </div>
+            <div class="scale-legend__item">
+              <span class="scale-legend__number">3</span>
+              <span>= Setuju</span>
+            </div>
+            <div class="scale-legend__item">
+              <span class="scale-legend__number">4</span>
+              <span>= Sangat Setuju</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Counter -->
+        <div class="progress-counter" id="progress-counter">
+          Terjawab: <span class="progress-counter__current" id="progress-current">0</span> / <span id="progress-total">20</span>
+        </div>
+
+        <!-- Questions Sections -->
+        <div id="questions-container">
+          <!-- Sections & Questions rendered dynamically by JavaScript -->
+        </div>
+
+        <!-- Submit -->
+        <div class="form-submit">
+          <button type="submit" class="btn btn--primary" id="btn-submit">
+            Kirim Jawaban
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <div class="container">
+      &copy; 2026 SMA Kornita IPB Bogor — Lab School
+    </div>
+  </footer>
+
+  <!-- Confirmation Modal -->
+  <div id="confirm-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <h3 class="modal__title" id="modal-title">Konfirmasi Pengiriman</h3>
+      <div class="divider" style="margin: var(--space-md) 0;">
+        <span class="divider__ornament">✦ ✦ ✦</span>
+      </div>
+      <p class="modal__desc">
+        Apakah Anda yakin ingin mengirim kuesioner ini? Pastikan seluruh data dan jawaban sudah terisi dengan benar.
+      </p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--outline" id="btn-cancel-modal">
+          Periksa Kembali
+        </button>
+        <button type="button" class="btn btn--primary" id="btn-confirm-submit">
+          Ya, Kirim Sekarang
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/form.js"></script>
+</body>
+</html>

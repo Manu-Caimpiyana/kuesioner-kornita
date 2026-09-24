@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard Kuesioner Sikap Disiplin — SMA Kornita IPB Bogor">
+  <title>Dashboard — Kuesioner SMA Kornita IPB Bogor</title>
+  <link rel="icon" type="image/png" href="assets/tab_logo.png">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body class="form-page">
+
+  <!-- Header -->
+  <header class="page-header">
+    <div class="container container--dashboard">
+      <div class="page-header__inner">
+        <img src="assets/logo.png" alt="Logo" class="page-header__logo">
+        <div>
+          <div class="page-header__title">Dashboard Kuesioner</div>
+          <p class="page-header__subtitle">SMA Kornita IPB Bogor — Lab School</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <div class="container container--dashboard">
+
+      <!-- Dashboard Header -->
+      <div class="dashboard__header">
+        <div class="dashboard__header-text">
+          <h1 class="dashboard__title">Hasil Kuesioner Sikap Disiplin</h1>
+          <p class="dashboard__subtitle">Data terkumpul dari seluruh responden</p>
+        </div>
+        <div class="dashboard__actions">
+          <button type="button" class="btn btn--outline" id="btn-export">
+            Unduh CSV / Excel
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card__value" id="stat-total">0</div>
+          <div class="stat-card__label">Total Responden</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__value" id="stat-avg">0.0</div>
+          <div class="stat-card__label">Rata-rata Skor</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__value" id="stat-highest">-</div>
+          <div class="stat-card__label">Skor Tertinggi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__value" id="stat-lowest">-</div>
+          <div class="stat-card__label">Skor Terendah</div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <section class="charts-section">
+        <h2 class="charts-section__title">Distribusi Jawaban per Pertanyaan</h2>
+        <div class="charts-grid" id="charts-grid">
+          <!-- Charts rendered by JavaScript -->
+        </div>
+      </section>
+
+      <!-- Responden Table -->
+      <section class="table-section">
+        <div class="table-section__header">
+          <div>
+            <h2 class="table-section__title">Daftar Responden Siswa</h2>
+            <span class="table-section__count" id="table-count">0 Responden</span>
+          </div>
+          <div class="table-section__filter">
+            <label for="filter-kelas" class="filter-label">Filter Kelas:</label>
+            <select id="filter-kelas" class="form-select filter-select">
+              <option value="all">Semua Kelas</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="table-classic" id="responses-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">No</th>
+                  <th>Nama Lengkap</th>
+                  <th>Kelas</th>
+                  <th>Waktu Pengisian</th>
+                  <th style="text-align: right;">Rata-rata Skor</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                <!-- Rendered by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <div class="container container--dashboard">
+      &copy; 2026 SMA Kornita IPB Bogor — Lab School &middot; Dashboard
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
