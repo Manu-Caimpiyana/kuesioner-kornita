@@ -38,8 +38,8 @@
 const APP_CONFIG = {
   // ── Supabase Configuration ──
   // Kosongkan jika belum setup, otomatis pakai localStorage
-  SUPABASE_URL: '',
-  SUPABASE_ANON_KEY: '',
+  SUPABASE_URL: 'https://xtljuezqbcqtmlclcqtb.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0bGp1ZXpxYmNxdG1sbGNqcXRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMjk0MTgsImV4cCI6MjEwNTgwNTQxOH0.-f7mGlVe5ZSikdDkqm1bPe7Rsqs96kM5qAXCwikCOs4',
   SUPABASE_TABLE: 'responses',
 
   // ── Application Settings ──
