@@ -24,6 +24,9 @@
     </div>
   </header>
 
+  <!-- Notification Toast -->
+  <div id="notification" class="notification" role="alert"></div>
+
   <main class="dashboard">
     <div class="container container--dashboard">
 
@@ -36,6 +39,9 @@
         <div class="dashboard__actions">
           <button type="button" class="btn btn--outline" id="btn-export">
             Unduh CSV / Excel
+          </button>
+          <button type="button" class="btn btn--danger-outline" id="btn-delete-all">
+            Hapus Semua Data
           </button>
         </div>
       </div>
@@ -92,6 +98,7 @@
                   <th>Kelas</th>
                   <th>Waktu Pengisian</th>
                   <th style="text-align: right;">Rata-rata Skor</th>
+                  <th style="text-align: center; width: 80px;">Aksi</th>
                 </tr>
               </thead>
               <tbody id="table-body">
@@ -111,6 +118,27 @@
       &copy; 2026 SMA Kornita IPB Bogor — Lab School &middot; Dashboard
     </div>
   </footer>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+    <div class="modal">
+      <h3 class="modal__title" id="delete-modal-title">Konfirmasi Hapus Data</h3>
+      <div class="divider" style="margin: var(--space-md) 0;">
+        <span class="divider__ornament">✦ ✦ ✦</span>
+      </div>
+      <p class="modal__desc" id="delete-modal-desc">
+        Apakah Anda yakin ingin menghapus data ini? Tindakan ini bersifat permanen dan tidak dapat dibatalkan.
+      </p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--outline" id="btn-delete-cancel">
+          Batal
+        </button>
+        <button type="button" class="btn btn--danger" id="btn-delete-confirm">
+          Ya, Hapus
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>

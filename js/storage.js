@@ -182,6 +182,69 @@ const Storage = (function () {
     }
   }
 
+  /**
+   * Delete a single response by id
+   * @param {string} id
+   * @returns {Promise<{ success: boolean, error?: string }>}
+   */
+  async function deleteResponse(id) {
+    if (useSupabase) {
+      try {
+        const { error } = await supabase
+          .from(APP_CONFIG.SUPABASE_TABLE)
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+        return { success: true };
+      } catch (err) {
+        console.error('[Storage] Error deleting response:', err);
+        return { success: false, error: err.message };
+      }
+    } else {
+      try {
+        let responses = localGetAll();
+        responses = responses.filter(function (r) {
+          return r.id !== id;
+        });
+        localSave(responses);
+        return { success: true };
+      } catch (err) {
+        console.error('[Storage] Error deleting from localStorage:', err);
+        return { success: false, error: err.message };
+      }
+    }
+  }
+
+  /**
+   * Delete all responses
+   * @returns {Promise<{ success: boolean, error?: string }>}
+   */
+  async function deleteAllResponses() {
+    if (useSupabase) {
+      try {
+        const { error } = await supabase
+          .from(APP_CONFIG.SUPABASE_TABLE)
+          .delete()
+          .not('id', 'is', null);
+
+        if (error) throw error;
+        return { success: true };
+      } catch (err) {
+        console.error('[Storage] Error deleting all responses:', err);
+        return { success: false, error: err.message };
+      }
+    } else {
+      try {
+        localStorage.removeItem(LOCAL_KEY);
+        return { success: true };
+      } catch (err) {
+        console.error('[Storage] Error clearing localStorage:', err);
+        return { success: false, error: err.message };
+      }
+    }
+  }
+
   // Initialize on load
   init();
 
@@ -190,5 +253,7 @@ const Storage = (function () {
     saveResponse,
     getResponses,
     getCount,
+    deleteResponse,
+    deleteAllResponses,
   };
 })();

@@ -28,6 +28,10 @@
    CREATE POLICY "Allow anonymous reads"
      ON responses FOR SELECT
      USING (true);
+
+   CREATE POLICY "Allow anonymous deletes"
+     ON responses FOR DELETE
+     USING (true);
    --------------------------------------------------
 
    5. Salin URL dan anon key dari Settings > API

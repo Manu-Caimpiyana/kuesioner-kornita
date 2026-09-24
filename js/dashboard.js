@@ -249,6 +249,118 @@
     return count > 0 ? (sum / count).toFixed(2) : '0.00';
   }
 
+  // ── Notification Toast ──
+
+  const notification = document.getElementById('notification');
+  let notificationTimer = null;
+
+  function hideNotification() {
+    if (notificationTimer) {
+      clearTimeout(notificationTimer);
+      notificationTimer = null;
+    }
+    if (notification) notification.classList.remove('is-visible');
+  }
+
+  function showNotification(message, type) {
+    if (!notification) return;
+    if (notificationTimer) clearTimeout(notificationTimer);
+
+    notification.innerHTML =
+      '<span class="notification__message">' + message + '</span>' +
+      '<button type="button" class="notification__close" aria-label="Tutup notifikasi" title="Tutup">&times;</button>';
+    notification.className = 'notification notification--' + type + ' is-visible';
+
+    const closeBtn = notification.querySelector('.notification__close');
+    if (closeBtn) {
+      closeBtn.onclick = hideNotification;
+    }
+
+    notificationTimer = setTimeout(hideNotification, 5000);
+  }
+
+  // ── Delete Confirmation Modal ──
+
+  const deleteModal = document.getElementById('delete-modal');
+  const deleteModalTitle = document.getElementById('delete-modal-title');
+  const deleteModalDesc = document.getElementById('delete-modal-desc');
+  const btnDeleteCancel = document.getElementById('btn-delete-cancel');
+  const btnDeleteConfirm = document.getElementById('btn-delete-confirm');
+  const btnDeleteAll = document.getElementById('btn-delete-all');
+
+  let pendingDelete = null;
+
+  function openDeleteModal(options) {
+    pendingDelete = options;
+    if (deleteModalTitle) deleteModalTitle.textContent = options.title;
+    if (deleteModalDesc) deleteModalDesc.textContent = options.desc;
+    if (deleteModal) deleteModal.classList.add('is-open');
+  }
+
+  function closeDeleteModal() {
+    pendingDelete = null;
+    if (deleteModal) deleteModal.classList.remove('is-open');
+  }
+
+  async function executeDelete() {
+    if (!pendingDelete) return;
+
+    btnDeleteConfirm.disabled = true;
+    btnDeleteConfirm.innerHTML = '<span class="spinner"></span> Menghapus...';
+    btnDeleteCancel.disabled = true;
+
+    try {
+      let result;
+      if (pendingDelete.type === 'all') {
+        result = await Storage.deleteAllResponses();
+      } else {
+        result = await Storage.deleteResponse(pendingDelete.id);
+      }
+
+      if (result.success) {
+        closeDeleteModal();
+        showNotification(
+          pendingDelete.type === 'all'
+            ? 'Seluruh data responden kuesioner berhasil dihapus.'
+            : 'Data responden berhasil dihapus.',
+          'success'
+        );
+        await reloadDashboardData();
+      } else {
+        closeDeleteModal();
+        showNotification(
+          'Gagal menghapus data: ' + (result.error || 'Terjadi kesalahan.'),
+          'error'
+        );
+      }
+    } catch (err) {
+      console.error('[Dashboard] Delete error:', err);
+      closeDeleteModal();
+      showNotification('Terjadi kesalahan saat menghapus data.', 'error');
+    } finally {
+      btnDeleteConfirm.disabled = false;
+      btnDeleteConfirm.textContent = 'Ya, Hapus';
+      btnDeleteCancel.disabled = false;
+    }
+  }
+
+  async function reloadDashboardData() {
+    cachedResponses = await Storage.getResponses();
+    const stats = computeStats(cachedResponses);
+    renderStats(stats);
+    renderCharts(stats);
+
+    const selectedClass = filterKelas ? filterKelas.value : 'all';
+    if (selectedClass === 'all') {
+      renderTable(cachedResponses);
+    } else {
+      const filtered = cachedResponses.filter(function (r) {
+        return r.kelas === selectedClass;
+      });
+      renderTable(filtered);
+    }
+  }
+
   function renderTable(responses) {
     if (!tableBody) return;
     tableBody.innerHTML = '';
@@ -256,7 +368,7 @@
 
     if (responses.length === 0) {
       tableBody.innerHTML =
-        '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: var(--space-xl);">' +
+        '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: var(--space-xl);">' +
         'Belum ada data responden siswa yang cocok.' +
         '</td></tr>';
       return;
@@ -277,7 +389,8 @@
         '<td style="font-weight: 600; color: var(--text-primary);">' + escapeHTML(r.nama) + '</td>' +
         '<td>' + escapeHTML(r.kelas) + '</td>' +
         '<td style="color: var(--text-muted); font-size: 0.85rem;">' + dateStr + '</td>' +
-        '<td style="text-align: right;"><span class="table-score-badge">' + avg + '</span></td>';
+        '<td style="text-align: right;"><span class="table-score-badge">' + avg + '</span></td>' +
+        '<td style="text-align: center;"><button type="button" class="btn-delete-row" data-id="' + r.id + '" data-name="' + escapeHTML(r.nama) + '" data-kelas="' + escapeHTML(r.kelas) + '" title="Hapus data siswa ini">🗑️ Hapus</button></td>';
 
       tableBody.appendChild(tr);
     });
@@ -384,6 +497,58 @@
           exportToCSV(toExport, selectedClass);
         });
       }
+
+      // Delete All Button
+      if (btnDeleteAll) {
+        btnDeleteAll.addEventListener('click', function () {
+          if (!cachedResponses || cachedResponses.length === 0) {
+            showNotification('Tidak ada data responden untuk dihapus.', 'warning');
+            return;
+          }
+          openDeleteModal({
+            type: 'all',
+            title: 'Hapus Seluruh Data Responden',
+            desc: 'PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data jawaban kuesioner (' + cachedResponses.length + ' siswa)? Seluruh chart dan statistik akan di-reset. Tindakan ini bersifat permanen dan tidak dapat dibatalkan.',
+          });
+        });
+      }
+
+      // Table Row Delete Button (Event Delegation)
+      if (tableBody) {
+        tableBody.addEventListener('click', function (e) {
+          const btn = e.target.closest('.btn-delete-row');
+          if (!btn) return;
+          const id = btn.getAttribute('data-id');
+          const name = btn.getAttribute('data-name');
+          const kelas = btn.getAttribute('data-kelas');
+          openDeleteModal({
+            type: 'single',
+            id: id,
+            title: 'Hapus Data Siswa',
+            desc: 'Apakah Anda yakin ingin menghapus data responden siswa atas nama "' + name + '" (Kelas ' + kelas + ')? Tindakan ini bersifat permanen dan tidak dapat dibatalkan.',
+          });
+        });
+      }
+
+      // Delete Modal Controls
+      if (btnDeleteCancel) {
+        btnDeleteCancel.addEventListener('click', closeDeleteModal);
+      }
+      if (btnDeleteConfirm) {
+        btnDeleteConfirm.addEventListener('click', executeDelete);
+      }
+      if (deleteModal) {
+        deleteModal.addEventListener('click', function (e) {
+          if (e.target === deleteModal) {
+            closeDeleteModal();
+          }
+        });
+      }
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && deleteModal && deleteModal.classList.contains('is-open')) {
+          closeDeleteModal();
+        }
+      });
     } catch (err) {
       console.error('[Dashboard] Error loading data:', err);
       chartsGrid.innerHTML =
