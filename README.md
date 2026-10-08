@@ -49,32 +49,5 @@ kuesioner-kornita/
 
 ---
 
-## 🚀 Cara Menjalankan Secara Lokal
 
-Cukup buka berkas HTML langsung pada peramban web (*browser*), atau jalankan server lokal:
-
-```bash
-# Menggunakan npx serve
-npx serve .
-
-# Atau menggunakan ekstensi Live Server di VS Code
-```
-
-Akses melalui peramban:
-- **Landing Page**: `http://localhost:3000/index.html`
-- **Form Kuesioner**: `http://localhost:3000/form.html`
-- **Dashboard Owner**: `http://localhost:3000/dashboard.html`
-
----
-
-## ⚙️ Menghubungkan ke Supabase (Opsional)
-
-Jika ingin menyimpan seluruh respons murid secara terpusat di cloud:
-1. Buat proyek baru di [Supabase](https://supabase.com).
-2. Jalankan perintah SQL yang tertera pada bagian atas berkas [`js/config.js`](js/config.js) di SQL Editor Supabase.
-3. Salin `URL` dan `Anon Key` dari menu **Project Settings > API**.
-4. Tempelkan kredensial tersebut ke variabel `SUPABASE_URL` dan `SUPABASE_ANON_KEY` di [`js/config.js`](js/config.js).
-
----
-
-© 2026 SMA Kornita IPB Bogor — Lab School
+© 2026 Manu Caimpiyana Bhimasena
